@@ -41,8 +41,9 @@ impl EffectcraftApp {
         }
         let Some(comp) = self.session.active_comp() else { return out };
         if let Some(l) = self.session.state.selected_layers.first().and_then(|id| comp.layer(*id)) {
-            out.push((PanelKind::EffectControls, format!("Effect Controls {}", l.name)));
-            out.push((PanelKind::Properties, format!("Properties: {}", l.name)));
+            // The panel's own name is a menu label; only the layer's name is project content.
+            out.push((PanelKind::EffectControls, format!("{} {}", crate::i18n::label(self, "window.panel", "Effect Controls"), l.name)));
+            out.push((PanelKind::Properties, format!("{}: {}", crate::i18n::label(self, "window.panel", "Properties"), l.name)));
         }
         out
     }

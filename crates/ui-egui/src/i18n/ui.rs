@@ -1254,7 +1254,7 @@ const SIMPLIFIED_CHINESE: &[(&str, &str)] = &[
     ("Transparency grid", "透明网格"),
     ("Tutorial complete", "教程完成"),
     ("Two-Node Camera", "双节点摄像机"),
-    ("Type", "文字"),
+    ("Type", "类型"),
     ("Type a command or effect…", "输入命令或效果…"),
     ("URL:", "URL："),
     ("Undock Panel", "取消停靠面板"),
@@ -5925,6 +5925,18 @@ const SIMPLIFIED_CHINESE: &[(&str, &str)] = &[
         "Review",
         "审阅",
     ),
+    (
+        "New Folder",
+        "新建文件夹",
+    ),
+    (
+        "Mode",
+        "模式",
+    ),
+    (
+        "Track Matte",
+        "轨道遮罩",
+    ),
 ];
 
 const TRADITIONAL_CHINESE: &[(&str, &str)] = &[
@@ -6354,7 +6366,7 @@ const TRADITIONAL_CHINESE: &[(&str, &str)] = &[
     ("Transparency grid", "透明格點"),
     ("Tutorial complete", "教學完成"),
     ("Two-Node Camera", "雙節點攝影機"),
-    ("Type", "文字"),
+    ("Type", "類型"),
     ("Type a command or effect…", "輸入命令或效果…"),
     ("URL:", "URL："),
     ("Undock Panel", "取消停靠面板"),
@@ -11019,6 +11031,18 @@ const TRADITIONAL_CHINESE: &[(&str, &str)] = &[
     (
         "Review",
         "審閱",
+    ),
+    (
+        "New Folder",
+        "新建文件夾",
+    ),
+    (
+        "Mode",
+        "模式",
+    ),
+    (
+        "Track Matte",
+        "軌道遮罩",
     ),
 ];
 
