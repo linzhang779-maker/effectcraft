@@ -209,10 +209,7 @@ impl EffectcraftApp {
         let docs = self.tab_docs();
         // Panel tabs are chrome, not project content: their default names come from the menu
         // catalog's `window.panel` rows, so a translated interface shows translated tabs.
-        let defaults: Vec<(PanelKind, String)> = PanelKind::ALL
-            .iter()
-            .map(|p| (*p, crate::i18n::label(self, "window.panel", p.title()).to_string()))
-            .collect();
+        let defaults: Vec<(PanelKind, String)> = PanelKind::ALL.iter().map(|p| (*p, crate::i18n::label(self, "window.panel", p.title()).to_string())).collect();
         let title = |p: PanelKind| {
             titles
                 .iter()
