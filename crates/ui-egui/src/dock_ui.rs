@@ -206,7 +206,20 @@ impl EffectcraftApp {
         let titles = self.tab_titles();
         let decos = self.tab_decos();
         let docs = self.tab_docs();
-        let title = |p: PanelKind| titles.iter().find(|(k, _)| *k == p).map(|(_, s)| s.clone()).unwrap_or_else(|| p.title().to_string());
+        // Panel tabs are chrome, not project content: their default names come from the menu
+        // catalog's `window.panel` rows, so a translated interface shows translated tabs.
+        let defaults: Vec<(PanelKind, String)> = PanelKind::ALL
+            .iter()
+            .map(|p| (*p, crate::i18n::label(self, "window.panel", p.title()).to_string()))
+            .collect();
+        let title = |p: PanelKind| {
+            titles
+                .iter()
+                .find(|(k, _)| *k == p)
+                .map(|(_, s)| s.clone())
+                .or_else(|| defaults.iter().find(|(k, _)| *k == p).map(|(_, s)| s.clone()))
+                .unwrap_or_else(|| p.title().to_string())
+        };
         let info = dock::TabInfo { title: &title, decos: &decos, docs: &docs };
         // Where each group's tabs are (tab drags show where a tab will land between them).
         let mut tab_rects: Vec<(String, Vec<(PanelKind, Rect)>)> = vec![];
