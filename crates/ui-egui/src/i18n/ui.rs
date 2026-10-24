@@ -1641,6 +1641,12 @@ const SIMPLIFIED_CHINESE: &[(&str, &str)] = &[
     ("Total Offset", "总偏移"),
     ("Per Layer", "每个图层"),
     ("Track", "跟踪"),
+    ("is {}  {}", "即 {}  {}"),
+    ("White", "白色"),
+    ("Black", "黑色"),
+    ("Text", "文本"),
+    ("Stroke", "描边"),
+    ("Paragraph", "段落"),
 ];
 
 const TRADITIONAL_CHINESE: &[(&str, &str)] = &[
@@ -2327,6 +2333,12 @@ const TRADITIONAL_CHINESE: &[(&str, &str)] = &[
     ("Total Offset", "總偏移"),
     ("Per Layer", "每個圖層"),
     ("Track", "追蹤"),
+    ("is {}  {}", "即 {}  {}"),
+    ("White", "白色"),
+    ("Black", "黑色"),
+    ("Text", "文本"),
+    ("Stroke", "描邊"),
+    ("Paragraph", "段落"),
 ];
 
 /// Ukrainian (uk): original translations of the same interface rows as the Chinese catalogs.

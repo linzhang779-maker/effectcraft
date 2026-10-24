@@ -176,8 +176,8 @@ fn timecode_field(ui: &mut egui::Ui, buf: &mut Option<String>, secs: &mut f64, r
         }
         *buf = None;
     }
-    let base = format!("Base {}{}", rate.timecode_base(), if df { "drop" } else { "" });
-    ui.label(egui::RichText::new(format!("is {shown}  {base}")).color(Color32::GRAY));
+    let base = tr_args("Base {}{}", &[&rate.timecode_base(), &if df { "drop" } else { "" }]);
+    ui.label(egui::RichText::new(tr_args("is {}  {}", &[&shown, &base])).color(Color32::GRAY));
     r
 }
 
@@ -264,7 +264,7 @@ pub fn show(
     ui.add_space(8.0);
     ui.horizontal(|ui| {
         for (tab, label, key) in [(Tab::Basic, "Basic", "basic"), (Tab::Advanced, "Advanced", "advanced"), (Tab::Renderer, "3D Renderer", "renderer")] {
-            let r = ui.selectable_label(d.tab == tab, label);
+            let r = ui.selectable_label(d.tab == tab, tr(label));
             auto.add(&format!("dialog.comp.tab.{key}"), r.rect, label);
             if r.clicked() {
                 d.tab = tab;
@@ -284,10 +284,10 @@ pub fn show(
                     .or_else(|| PRESETS.iter().find(|(_, w, h, par, f)| matches(d, *w, *h, *par, *f)).map(|p| p.0))
                     .unwrap_or("Custom");
                 ui.horizontal(|ui| {
-                    let r = egui::ComboBox::from_id_salt("comp-preset").width(300.0).selected_text(current).show_ui(ui, |ui| {
+                    let r = egui::ComboBox::from_id_salt("comp-preset").width(300.0).selected_text(tr(current)).show_ui(ui, |ui| {
                         // Your own presets first, then the built-in ones.
                         for q in custom {
-                            if ui.selectable_label(q.name == current, &q.name).clicked() {
+                            if ui.selectable_label(q.name == current, tr(&q.name)).clicked() {
                                 (d.width, d.height, d.pixel_aspect, d.fps) = (q.width, q.height, q.pixel_aspect, q.frame_rate);
                             }
                         }
@@ -295,7 +295,7 @@ pub fn show(
                             ui.separator();
                         }
                         for (name, w, h, par, f) in PRESETS {
-                            if ui.selectable_label(*name == current, *name).clicked() {
+                            if ui.selectable_label(*name == current, tr(name)).clicked() {
                                 (d.width, d.height, d.pixel_aspect, d.fps) = (*w, *h, *par, *f);
                             }
                         }
@@ -325,7 +325,7 @@ pub fn show(
                     let (ow, oh) = (d.width, d.height);
                     let r = ui.add(crate::widgets::drag_value(egui::DragValue::new(&mut d.width).range(4..=30000).suffix(" px")));
                     auto.add("dialog.comp.width", r.rect, "Width");
-                    let lbl = format!("Lock Aspect Ratio to {}", aspect_label(ow as f64, oh as f64));
+                    let lbl = tr_args("Lock Aspect Ratio to {}", &[&aspect_label(ow as f64, oh as f64)]);
                     let r = ui.checkbox(&mut d.lock_aspect, lbl);
                     auto.add("dialog.comp.lockAspect", r.rect, "Lock Aspect Ratio");
                     if d.lock_aspect && ow != d.width && ow > 0 {
@@ -348,9 +348,9 @@ pub fn show(
                         .find(|(_, v)| (v - d.pixel_aspect).abs() < 1e-3)
                         .map(|p| p.0.to_string())
                         .unwrap_or_else(|| format!("{:.2}", d.pixel_aspect));
-                    let r = egui::ComboBox::from_id_salt("comp-par").width(220.0).selected_text(cur).show_ui(ui, |ui| {
+                    let r = egui::ComboBox::from_id_salt("comp-par").width(220.0).selected_text(tr(&cur)).show_ui(ui, |ui| {
                         for (name, v) in PIXEL_ASPECTS {
-                            if ui.selectable_label((v - d.pixel_aspect).abs() < 1e-3, *name).clicked() {
+                            if ui.selectable_label((v - d.pixel_aspect).abs() < 1e-3, tr(name)).clicked() {
                                 d.pixel_aspect = *v;
                             }
                         }
@@ -418,7 +418,7 @@ pub fn show(
                 ui.horizontal(|ui| {
                     let r = crate::widgets::srgb_color_button(ui, &mut d.bg);
                     auto.add("dialog.comp.background", r.rect, "Background Color");
-                    ui.label(color_name(d.bg));
+                    ui.label(tr(color_name(d.bg)));
                 });
                 ui.end_row();
             });

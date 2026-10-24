@@ -49,10 +49,17 @@ pub(crate) fn name(english: &str) -> String {
     catalog(current()).and_then(|c| c.translated(english)).map_or_else(|| english.to_string(), str::to_string)
 }
 
+/// Does the property `english` match the search `query` (lowercase)? Both names match, so a
+/// translated interface can be searched either way.
+pub(crate) fn matches(english: &str, query: &str) -> bool {
+    english.to_lowercase().contains(query) || catalog(current()).and_then(|c| c.translated(english)).is_some_and(|t| t.to_lowercase().contains(query))
+}
+
 /// Simplified Chinese (`zh-hans`): layer, composition, shape, mask, camera and light properties,
 /// then the effect parameters.
 const SIMPLIFIED_CHINESE: &[Row] = &[
     ("3D Channel", "3D 通道"),
+    ("3D Model", "3D 模型"),
     ("3D Perspective", "3D 透视"),
     ("3D Point", "3D 点"),
     ("3D View", "3D 视图"),
@@ -127,6 +134,7 @@ const SIMPLIFIED_CHINESE: &[Row] = &[
     ("Complexity", "复杂度"),
     ("Composite", "合成"),
     ("Composite Original", "合成原图"),
+    ("Composition", "合成"),
     ("Confidence", "置信度"),
     ("Configuration", "配置"),
     ("Contents", "内容"),
@@ -142,6 +150,7 @@ const SIMPLIFIED_CHINESE: &[Row] = &[
     ("Darktones", "暗色调"),
     ("Dash", "虚线"),
     ("Dashes", "虚线"),
+    ("Data", "数据"),
     ("Decay", "衰减"),
     ("Deform", "变形"),
     ("Density", "密度"),
@@ -191,6 +200,7 @@ const SIMPLIFIED_CHINESE: &[Row] = &[
     ("Floor", "地面"),
     ("Flow", "流动"),
     ("Flow Steps", "流动步数"),
+    ("Folder", "文件夹"),
     ("Force", "力"),
     ("Foreground (Inside)", "前景（内部）"),
     ("Forking", "分叉"),
@@ -223,9 +233,11 @@ const SIMPLIFIED_CHINESE: &[Row] = &[
     ("Horizontal Radius", "水平半径"),
     ("Hue", "色相"),
     ("ID", "ID"),
+    ("Image", "图像"),
     ("Image Contours: Channel", "图像轮廓：通道"),
     ("Image Contours: Threshold", "图像轮廓：阈值"),
     ("Image Contours: Tolerance", "图像轮廓：容差"),
+    ("Image Sequence", "图像序列"),
     ("In Front", "在前"),
     ("Intensity", "强度"),
     ("Intent", "意图"),
@@ -385,6 +397,7 @@ const SIMPLIFIED_CHINESE: &[Row] = &[
     ("Smoothing", "平滑"),
     ("Smoothness", "平滑度"),
     ("Softness", "柔化度"),
+    ("Solid", "纯色"),
     ("Source", "源"),
     ("Spacing", "间距"),
     ("Specular", "高光"),
@@ -457,6 +470,7 @@ const SIMPLIFIED_CHINESE: &[Row] = &[
     ("Vertical Blocks", "垂直方块"),
     ("Vertical Radius", "垂直半径"),
     ("Vibrance", "自然饱和度"),
+    ("Video", "视频"),
     ("View", "视图"),
     ("View Transform", "视图变换"),
     ("Voices", "声音数"),
@@ -474,6 +488,8 @@ const SIMPLIFIED_CHINESE: &[Row] = &[
     ("Wipe", "擦除"),
     ("Wipe Angle", "擦除角度"),
     ("Wipe Center", "擦除中心"),
+    ("X Rotation", "X 轴旋转"),
+    ("Y Rotation", "Y 轴旋转"),
     ("Yellows", "黄色"),
     ("Z Rotation", "Z 轴旋转"),
     ("Zig Zag 1", "锯齿 1"),
@@ -483,6 +499,7 @@ const SIMPLIFIED_CHINESE: &[Row] = &[
 /// Traditional Chinese (`zh-hant`): the same rows, converted with OpenCC.
 const TRADITIONAL_CHINESE: &[Row] = &[
     ("3D Channel", "3D 通道"),
+    ("3D Model", "3D 模型"),
     ("3D Perspective", "3D 透視"),
     ("3D Point", "3D 點"),
     ("3D View", "3D 視圖"),
@@ -557,6 +574,7 @@ const TRADITIONAL_CHINESE: &[Row] = &[
     ("Complexity", "複雜度"),
     ("Composite", "合成"),
     ("Composite Original", "合成原圖"),
+    ("Composition", "合成"),
     ("Confidence", "置信度"),
     ("Configuration", "配置"),
     ("Contents", "內容"),
@@ -572,6 +590,7 @@ const TRADITIONAL_CHINESE: &[Row] = &[
     ("Darktones", "暗色調"),
     ("Dash", "虛線"),
     ("Dashes", "虛線"),
+    ("Data", "資料"),
     ("Decay", "衰減"),
     ("Deform", "變形"),
     ("Density", "密度"),
@@ -621,6 +640,7 @@ const TRADITIONAL_CHINESE: &[Row] = &[
     ("Floor", "地面"),
     ("Flow", "流動"),
     ("Flow Steps", "流動步數"),
+    ("Folder", "檔案夾"),
     ("Force", "力"),
     ("Foreground (Inside)", "前景（內部）"),
     ("Forking", "分叉"),
@@ -653,9 +673,11 @@ const TRADITIONAL_CHINESE: &[Row] = &[
     ("Horizontal Radius", "水平半徑"),
     ("Hue", "色相"),
     ("ID", "ID"),
+    ("Image", "影像"),
     ("Image Contours: Channel", "圖像輪廓：通道"),
     ("Image Contours: Threshold", "圖像輪廓：閾值"),
     ("Image Contours: Tolerance", "圖像輪廓：容差"),
+    ("Image Sequence", "影像序列"),
     ("In Front", "在前"),
     ("Intensity", "強度"),
     ("Intent", "意圖"),
@@ -815,6 +837,7 @@ const TRADITIONAL_CHINESE: &[Row] = &[
     ("Smoothing", "平滑"),
     ("Smoothness", "平滑度"),
     ("Softness", "柔化度"),
+    ("Solid", "純色"),
     ("Source", "源"),
     ("Spacing", "間距"),
     ("Specular", "高光"),
@@ -887,6 +910,7 @@ const TRADITIONAL_CHINESE: &[Row] = &[
     ("Vertical Blocks", "垂直方塊"),
     ("Vertical Radius", "垂直半徑"),
     ("Vibrance", "自然飽和度"),
+    ("Video", "影片"),
     ("View", "視圖"),
     ("View Transform", "視圖變換"),
     ("Voices", "聲音數"),
@@ -904,6 +928,8 @@ const TRADITIONAL_CHINESE: &[Row] = &[
     ("Wipe", "擦除"),
     ("Wipe Angle", "擦除角度"),
     ("Wipe Center", "擦除中心"),
+    ("X Rotation", "X 軸旋轉"),
+    ("Y Rotation", "Y 軸旋轉"),
     ("Yellows", "黃色"),
     ("Z Rotation", "Z 軸旋轉"),
     ("Zig Zag 1", "鋸齒 1"),
