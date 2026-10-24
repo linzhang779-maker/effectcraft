@@ -244,6 +244,12 @@ fn matches(d: &CompDraft, w: u32, h: u32, par: f64, fps: f64) -> bool {
     w == d.width && h == d.height && (par - d.pixel_aspect).abs() < 1e-3 && (fps - d.fps).abs() < 1e-3
 }
 
+/// The label a preset is listed under: a built-in one is catalogued, while one the user saved
+/// keeps the name they typed — that name is their data, not an interface string.
+fn preset_label(name: &str) -> String {
+    if PRESETS.iter().any(|p| p.0 == name) { tr(name).to_string() } else { name.to_string() }
+}
+
 /// Draw the dialog. Returns `Some(params)` when OK is pressed, `Some(Null)` on Cancel. `custom`
 /// are the presets the user saved; saving or deleting one pushes its engine command to `cmds`.
 pub fn show(
@@ -284,10 +290,10 @@ pub fn show(
                     .or_else(|| PRESETS.iter().find(|(_, w, h, par, f)| matches(d, *w, *h, *par, *f)).map(|p| p.0))
                     .unwrap_or("Custom");
                 ui.horizontal(|ui| {
-                    let r = egui::ComboBox::from_id_salt("comp-preset").width(300.0).selected_text(tr(current)).show_ui(ui, |ui| {
+                    let r = egui::ComboBox::from_id_salt("comp-preset").width(300.0).selected_text(preset_label(current)).show_ui(ui, |ui| {
                         // Your own presets first, then the built-in ones.
                         for q in custom {
-                            if ui.selectable_label(q.name == current, tr(&q.name)).clicked() {
+                            if ui.selectable_label(q.name == current, &q.name).clicked() {
                                 (d.width, d.height, d.pixel_aspect, d.fps) = (q.width, q.height, q.pixel_aspect, q.frame_rate);
                             }
                         }

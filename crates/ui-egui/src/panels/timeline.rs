@@ -802,6 +802,15 @@ fn search_rows(l: &Layer, q: &str) -> Vec<Row> {
             }
         }
     }
+    /// Does property `p` match the search `q` (lowercase)? A 3D layer's Rotation is drawn as
+    /// "Z Rotation" beside X and Y, so that drawn name is searched as well.
+    fn prop_hit(l: &Layer, p: &Property, q: &str) -> bool {
+        crate::i18n::props::matches(&p.name, q)
+            || (p.name == "Rotation"
+                && l.is_3d()
+                && l.transform().and_then(|t| t.get("rotation")).is_some_and(|r| r.uid == p.uid)
+                && crate::i18n::props::matches("Z Rotation", q))
+    }
     /// The children of `g` that match `q`: a name-matching group brings its whole contents
     /// (`all`); otherwise the search recurses and keeps only subtrees with hits. A shape
     /// group's inner Contents is searched through without a row of its own (as in AE).
@@ -828,7 +837,7 @@ fn search_rows(l: &Layer, q: &str) -> Vec<Row> {
                         out.extend(inner);
                     }
                 }
-                Node::Prop(p) if prop_visible(p, l) && crate::i18n::props::matches(&p.name, q) => {
+                Node::Prop(p) if prop_visible(p, l) && prop_hit(l, p, q) => {
                     out.push(Row { layer: l.id, depth, kind: RowKind::Prop { uid: p.uid } });
                 }
                 _ => {}
